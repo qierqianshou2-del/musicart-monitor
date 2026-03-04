@@ -3,118 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Everglow Offline Fansign — Sales Monitor</title>
+<title>everglow offline MA Fansign</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 :root {
-  --bg: #f0f2f7; --surface: #ffffff; --border: #e8eaef;
-  --text: #1a1d2e; --muted: #8a90a2; --light: #b0b6c8;
-  --blue: #4a90d9; --blue-soft: #eaf2fb;
-  --green: #3db87a; --green-soft: #e8f7ef;
-  --red: #e05c6a; --red-soft: #fdf0f1;
+  --bg: #f0f2f7;
+  --surface: #ffffff;
+  --border: #e8eaef;
+  --text: #1a1d2e;
+  --muted: #8a90a2;
+  --light: #b0b6c8;
+  --blue: #4a90d9;
+  --blue-soft: #eaf2fb;
+  --green: #3db87a;
+  --green-soft: #e8f7ef;
+  --red: #e05c6a;
+  --red-soft: #fdf0f1;
   --shadow: 0 2px 12px rgba(0,0,0,0.06);
   --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
   --radius: 14px;
 }
-body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; padding:32px 24px; }
-.page { max-width:1200px; margin:0 auto; }
-.header { display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
-.header-icon { font-size:28px; line-height:1; margin-top:2px; }
-.header h1 { font-size:26px; font-weight:700; letter-spacing:-0.5px; }
-.header p { font-size:13px; color:var(--muted); margin-top:3px; }
-.notice { background:var(--surface); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:13px 16px; font-size:13px; color:var(--muted); line-height:1.75; margin-bottom:28px; box-shadow:var(--shadow); }
-.notice strong { color:var(--text); }
-.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
-@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:500px){.stats-grid{grid-template-columns:1fr;}}
-.stat-card { background:var(--surface); border-radius:var(--radius); padding:20px 22px 18px; box-shadow:var(--shadow); transition:box-shadow .2s,transform .2s; }
-.stat-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-1px); }
-.stat-label { font-size:11px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:6px; margin-bottom:12px; text-transform:uppercase; letter-spacing:.5px; }
-.stat-value { font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:600; color:var(--text); line-height:1; margin-bottom:10px; min-height:36px; display:flex; align-items:center; }
-.stat-value .placeholder { display:inline-block; height:30px; width:90px; background:linear-gradient(90deg,#eee 25%,#f5f5f5 50%,#eee 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:6px; }
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.stat-input { width:100%; border:none; outline:none; font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:600; color:var(--text); background:transparent; padding:0; line-height:1; }
-.stat-input::placeholder { color:#dde0e8; }
-.stat-sub { font-size:11px; color:var(--light); border-top:1px solid var(--border); padding-top:10px; margin-top:10px; }
-.config-bar { background:var(--surface); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); margin-bottom:24px; display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; }
-.config-field { display:flex; flex-direction:column; gap:5px; flex:1; min-width:140px; }
-.config-field label { font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.4px; text-transform:uppercase; }
-.config-field input { border:1.5px solid var(--border); border-radius:8px; padding:8px 12px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text); background:var(--bg); outline:none; transition:border-color .15s; }
-.config-field input:focus { border-color:var(--blue); background:#fff; }
-.btn { padding:9px 20px; border-radius:8px; border:none; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; white-space:nowrap; }
-.btn-start { background:var(--blue); color:#fff; }
-.btn-start:hover:not(:disabled) { background:#3a7ec9; }
-.btn-start:disabled { background:#c5d5e8; cursor:not-allowed; }
-.btn-stop { background:#fff; color:var(--red); border:1.5px solid #f0c0c5; }
-.btn-stop:hover:not(:disabled) { background:var(--red-soft); }
-.btn-stop:disabled { opacity:.45; cursor:not-allowed; }
-.table-panel { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
-.table-top { display:flex; align-items:center; justify-content:space-between; padding:18px 22px 14px; flex-wrap:wrap; gap:10px; }
-.table-title { display:flex; align-items:center; gap:10px; }
-.table-title h2 { font-size:15px; font-weight:600; }
-.badge { font-size:12px; color:var(--muted); background:var(--bg); border-radius:20px; padding:2px 10px; font-weight:500; }
-.updated-tag { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-.dot { width:7px; height:7px; border-radius:50%; background:var(--green); }
-.dot.idle { background:#c5cad8; }
-.sort-wrap { display:flex; align-items:center; gap:6px; padding:0 22px 14px; }
-.sort-radio { display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px; color:var(--muted); padding:5px 14px; border-radius:20px; border:1.5px solid var(--border); transition:all .15s; user-select:none; }
-.sort-radio.active { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); font-weight:600; }
-.sort-radio .radio-dot { width:12px; height:12px; border-radius:50%; border:2px solid currentColor; position:relative; flex-shrink:0; }
-.sort-radio.active .radio-dot::after { content:''; position:absolute; inset:2px; border-radius:50%; background:var(--blue); }
-table { width:100%; border-collapse:collapse; }
-thead th { text-align:left; font-size:11px; color:var(--light); font-weight:600; padding:10px 22px; background:#fafbfc; border-top:1px solid var(--border); border-bottom:1px solid var(--border); letter-spacing:.4px; text-transform:uppercase; }
-tbody tr { border-bottom:1px solid #f3f4f7; animation:fadeIn .25s ease; }
-@keyframes fadeIn{from{opacity:0;background:#edf6ff}to{opacity:1;background:transparent}}
-tbody tr:hover { background:#fafbfc; }
-tbody tr:last-child { border-bottom:none; }
-td { padding:13px 22px; font-size:13px; vertical-align:middle; }
-td.col-time { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); white-space:nowrap; }
-td.col-product { font-weight:500; }
-td.col-stock { font-family:'JetBrains Mono',monospace; font-size:12px; }
-.row-initial { background:#f4f7ff !important; }
-.row-initial td.col-time { color:var(--blue); font-weight:600; }
-.stock-bar-wrap { display:flex; align-items:center; gap:8px; }
-.stock-bar { height:6px; border-radius:3px; background:#e8eaef; width:80px; overflow:hidden; }
-.stock-bar-inner { height:100%; border-radius:3px; background:var(--blue); transition:width .4s ease; }
-.stock-text { font-size:11px; color:var(--muted); }
-.pill { display:inline-flex; align-items:center; justify-content:center; gap:3px; padding:4px 12px; border-radius:20px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; min-width:52px; }
-.pill.positive { background:var(--green-soft); color:var(--green); }
-.pill.negative { background:var(--red-soft); color:var(--red); }
-.pill.neutral  { background:var(--bg); color:var(--muted); }
-.pill.initial  { background:var(--blue-soft); color:var(--blue); font-size:10px; letter-spacing:.3px; padding:4px 10px; }
-.empty { text-align:center; padding:60px 20px; color:var(--light); }
-.empty .icon { font-size:36px; margin-bottom:10px; }
-.empty p { font-size:13px; }
-.table-footer { display:flex; align-items:center; gap:8px; padding:12px 22px; border-top:1px solid var(--border); background:#fafbfc; font-size:12px; color:var(--light); }
-.spin { display:inline-block; animation:spin 1s linear infinite; font-size:14px; opacity:0; transition:opacity .2s; }
-.spin.active { opacity:1; }
-@keyframes spin{to{transform:rotate(360deg)}}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding: 32px 24px;
+}
+
+.page { max-width: 1200px; margin: 0 auto; }
+
+.header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+.header-icon { font-size: 28px; line-height: 1; margin-top: 2px; }
+.header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+.notice {
+  background: var(--surface);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 8px 8px 0;
+  padding: 13px 16px;
+  font-size: 13px; color: var(--muted); line-height: 1.75;
+  margin-bottom: 28px; box-shadow: var(--shadow);
+}
+.notice strong { color: var(--text); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-bottom: 28px;
+}
+@media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
+
+.stat-card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 20px 22px 18px; box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.stat-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+.stat-label {
+  font-size: 11px; color: var(--muted); font-weight: 600;
+  display: flex; align-items: center; gap: 6px; margin-bottom: 12px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; font-weight: 600; color: var(--text);
+  line-height: 1; margin-bottom: 10px; min-height: 36px;
+  display: flex; align-items: center;
+}
+.stat-value .placeholder {
+  display: inline-block; height: 30px; width: 90px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.stat-input {
+  width: 100%; border: none; outline: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; font-weight: 600;
+  color: var(--text); background: transparent; padding: 0; line-height: 1;
+}
+.stat-input::placeholder { color: #dde0e8; }
+.stat-sub {
+  font-size: 11px; color: var(--light);
+  border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px;
+}
+
+.config-bar {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 24px;
+  display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end;
+}
+.config-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 140px; }
+.config-field label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+.config-field input {
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text);
+  background: var(--bg); outline: none; transition: border-color 0.15s;
+}
+.config-field input:focus { border-color: var(--blue); background: #fff; }
+
+.btn {
+  padding: 9px 20px; border-radius: 8px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-start { background: var(--blue); color: #fff; }
+.btn-start:hover:not(:disabled) { background: #3a7ec9; }
+.btn-start:disabled { background: #c5d5e8; cursor: not-allowed; }
+.btn-stop { background: #fff; color: var(--red); border: 1.5px solid #f0c0c5; }
+.btn-stop:hover:not(:disabled) { background: var(--red-soft); }
+.btn-stop:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.table-panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.table-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px 14px; flex-wrap: wrap; gap: 10px;
+}
+.table-title { display: flex; align-items: center; gap: 10px; }
+.table-title h2 { font-size: 15px; font-weight: 600; }
+.badge {
+  font-size: 12px; color: var(--muted);
+  background: var(--bg); border-radius: 20px; padding: 2px 10px; font-weight: 500;
+}
+.updated-tag {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.dot.idle { background: #c5cad8; }
+
+.sort-wrap { display: flex; align-items: center; gap: 6px; padding: 0 22px 14px; }
+.sort-radio {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; font-size: 13px; color: var(--muted);
+  padding: 5px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); transition: all 0.15s; user-select: none;
+}
+.sort-radio.active { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+.sort-radio .radio-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid currentColor; position: relative; flex-shrink: 0;
+}
+.sort-radio.active .radio-dot::after {
+  content: ''; position: absolute; inset: 2px; border-radius: 50%; background: var(--blue);
+}
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left; font-size: 11px; color: var(--light); font-weight: 600;
+  padding: 10px 22px; background: #fafbfc;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  letter-spacing: 0.4px; text-transform: uppercase;
+}
+tbody tr { border-bottom: 1px solid #f3f4f7; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; background: #edf6ff; } to { opacity: 1; background: transparent; } }
+tbody tr:hover { background: #fafbfc; }
+tbody tr:last-child { border-bottom: none; }
+
+td { padding: 13px 22px; font-size: 13px; vertical-align: middle; }
+td.col-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); white-space: nowrap; }
+td.col-product { font-weight: 500; }
+td.col-stock { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+.stock-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.stock-bar { height: 6px; border-radius: 3px; background: #e8eaef; width: 80px; overflow: hidden; }
+.stock-bar-inner { height: 100%; border-radius: 3px; background: var(--blue); transition: width 0.4s ease; }
+.stock-text { font-size: 11px; color: var(--muted); }
+
+.pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 3px; padding: 4px 12px; border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; min-width: 52px;
+}
+.pill.positive { background: var(--green-soft); color: var(--green); }
+.pill.negative { background: var(--red-soft); color: var(--red); }
+.pill.neutral  { background: var(--bg); color: var(--muted); }
+
+.empty { text-align: center; padding: 60px 20px; color: var(--light); }
+.empty .icon { font-size: 36px; margin-bottom: 10px; }
+.empty p { font-size: 13px; }
+
+.table-footer {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-top: 1px solid var(--border);
+  background: #fafbfc; font-size: 12px; color: var(--light);
+}
+.spin { display: inline-block; animation: spin 1s linear infinite; font-size: 14px; opacity: 0; transition: opacity 0.2s; }
+.spin.active { opacity: 1; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 <div class="page">
+
   <div class="header">
-    <div class="header-icon">🌸</div>
+    <div class="header-icon">🎫</div>
     <div>
-      <h1>Everglow Offline Fansign</h1>
-      <p>MusicArt Real-Time Sales Monitor</p>
+      <h1>everglow offline MA Fansign</h1>
+      <p>MusicArt · everglow offline MA Fansign</p>
     </div>
   </div>
 
   <div class="notice">
-    Please monitor sales changes closely in the last 5–10 minutes for any supplementary orders. The recommended cut is calculated from the median of all data sources — for reference only, not a guaranteed cut-off line. If quota numbers seem incorrect or data hasn't updated in a while, contact: <strong>vx: qx12423</strong>
+    Please monitor sales changes closely in the last 5–10 minutes for any supplementary orders. The recommended cut is calculated from the median of all data sources — for reference only, not a guaranteed cut-off line. If quota numbers seem incorrect or data hasn't updated in a while, contact us: <strong>vx: qx12423</strong>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-label">💧 Inflation Threshold</div>
-      <div class="stat-value"><input class="stat-input" id="inputThreshold" type="number" placeholder="—" min="1"></div>
+      <div class="stat-value">
+        <input class="stat-input" id="inputThreshold" type="number" placeholder="—" min="1">
+      </div>
       <div class="stat-sub">Enter a positive integer to calculate recommended cut</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">👤 Quota Slots</div>
-      <div class="stat-value"><input class="stat-input" id="inputQuota" type="number" value="15" min="1"></div>
+      <div class="stat-value">
+        <input class="stat-input" id="inputQuota" type="number" value="15" min="1">
+      </div>
       <div class="stat-sub">Total available slots for this event</div>
     </div>
     <div class="stat-card">
@@ -123,28 +237,28 @@ td.col-stock { font-family:'JetBrains Mono',monospace; font-size:12px; }
       <div class="stat-sub">Estimated cut-off quantity — reference only</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">📊 Current Sales</div>
+      <div class="stat-label">📊 Total Sales</div>
       <div class="stat-value" id="statTotal"><span class="placeholder"></span></div>
-      <div class="stat-sub" id="statInitialNote">Waiting for first fetch...</div>
+      <div class="stat-sub">Total units sold for this event</div>
     </div>
   </div>
 
   <div class="config-bar">
     <div class="config-field">
       <label>Product UID</label>
-      <input id="cfgUid" type="text" value="3530663">
+      <input id="cfgUid" type="text" value="3530663" placeholder="3530663">
     </div>
     <div class="config-field">
       <label>Cart ID</label>
-      <input id="cfgCart" type="text" value="ml5al9hn6ex">
+      <input id="cfgCart" type="text" value="ml5al9hn6ex" placeholder="ml5al9hn6ex">
     </div>
     <div class="config-field" style="max-width:110px">
       <label>Interval (sec)</label>
       <input id="cfgInterval" type="number" value="30" min="5">
     </div>
-    <div class="config-field" style="max-width:200px">
+    <div class="config-field" style="max-width:180px">
       <label>Product Name</label>
-      <input id="cfgName" type="text" value="Everglow Offline">
+      <input id="cfgName" type="text" value="everglow offline" placeholder="e.g. everglow offline">
     </div>
     <button class="btn btn-start" id="btnStart" onclick="startMonitor()">▶ Start Monitoring</button>
     <button class="btn btn-stop"  id="btnStop"  onclick="stopMonitor()" disabled>■ Stop</button>
@@ -153,7 +267,8 @@ td.col-stock { font-family:'JetBrains Mono',monospace; font-size:12px; }
   <div class="table-panel">
     <div class="table-top">
       <div class="table-title">
-        <span>📋</span><h2>Real-Time Sales Log</h2>
+        <span>📋</span>
+        <h2>Real-Time Sales Log</h2>
         <span class="badge" id="countBadge">0 entries</span>
       </div>
       <div class="updated-tag">
@@ -161,29 +276,50 @@ td.col-stock { font-family:'JetBrains Mono',monospace; font-size:12px; }
         <span id="lastUpdated">Not yet updated</span>
       </div>
     </div>
+
     <div class="sort-wrap">
-      <label class="sort-radio active" id="radioTime" onclick="setSort('time')"><span class="radio-dot"></span> Chronological</label>
-      <label class="sort-radio" id="radioSales" onclick="setSort('sales')"><span class="radio-dot"></span> Sales (High → Low)</label>
+      <label class="sort-radio active" id="radioTime" onclick="setSort('time')">
+        <span class="radio-dot"></span> Chronological
+      </label>
+      <label class="sort-radio" id="radioSales" onclick="setSort('sales')">
+        <span class="radio-dot"></span> Sales (High → Low)
+      </label>
     </div>
+
     <table>
-      <thead><tr><th>Time</th><th>Product</th><th>Sales Count</th><th>Change</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Product</th>
+          <th>Stock Change</th>
+          <th>Units Sold</th>
+        </tr>
+      </thead>
       <tbody id="tableBody">
-        <tr><td colspan="4"><div class="empty"><div class="icon">📡</div><p>Click "Start Monitoring" to begin</p></div></td></tr>
+        <tr>
+          <td colspan="4">
+            <div class="empty">
+              <div class="icon">📡</div>
+              <p>Click "Start Monitoring" to begin live data fetching</p>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
+
     <div class="table-footer">
       <span class="spin" id="spinIcon">↻</span>
       <span id="footerMsg">Auto-refreshes every 30 seconds</span>
     </div>
   </div>
-</div>
 
+</div>
 <script>
-// ── STEP 1: Paste your Cloudflare Worker URL here after deploying worker.js ──
+// ─── IMPORTANT: Replace with your actual Cloudflare Worker URL ───────────────
 const WORKER_URL = "https://billowing-salad-2570.qierqianshou2.workers.dev/";
 // ─────────────────────────────────────────────────────────────────────────────
 
-let records = [], sortMode = 'time', timer = null, running = false, lastSales = null, initialSales = null;
+let records = [], sortMode = 'time', timer = null, running = false, lastSales = null;
 
 function setSort(mode) {
   sortMode = mode;
@@ -199,30 +335,30 @@ function renderTable() {
     return;
   }
   let rows = [...records];
-  if (sortMode === 'sales') rows.sort((a, b) => b.sales - a.sales);
+  if (sortMode === 'sales') rows.sort((a, b) => Math.abs(b.qty) - Math.abs(a.qty));
   else rows.sort((a, b) => b.ts - a.ts);
 
   tbody.innerHTML = rows.map(r => {
-    const isInitial = r.stockBefore === null;
-    const pct       = Math.min(100, Math.max(4, (r.sales / (lastSales || r.sales || 1)) * 100));
-    const barColor  = isInitial ? '#4a90d9' : r.qty > 0 ? '#3db87a' : r.qty < 0 ? '#e05c6a' : '#b0b6c8';
-    const pillHtml  = isInitial
-      ? `<span class="pill initial">INITIAL</span>`
-      : (() => {
-          const sign = r.qty > 0 ? '+' : '';
-          const cls  = r.qty > 0 ? 'positive' : r.qty < 0 ? 'negative' : 'neutral';
-          return `<span class="pill ${cls}">${sign}${r.qty}</span>`;
-        })();
-    return `<tr class="${isInitial ? 'row-initial' : ''}">
+    const changeStr = r.stockBefore !== null
+      ? `${r.stockBefore} → ${r.stockAfter}`
+      : `Initial: ${r.stockAfter}`;
+    const pct = Math.min(100, Math.max(4, (r.stockAfter / (lastSales || r.stockAfter || 1)) * 100));
+    const barColor = r.qty < 0 ? '#e05c6a' : r.qty > 0 ? '#3db87a' : '#4a90d9';
+    let pillCls = 'neutral', sign = '';
+    if (r.qty > 0)      { pillCls = 'positive'; sign = '+'; }
+    else if (r.qty < 0) { pillCls = 'negative'; }
+    return `<tr>
       <td class="col-time">${r.time}</td>
       <td class="col-product">${r.product}</td>
       <td class="col-stock">
         <div class="stock-bar-wrap">
-          <div class="stock-bar"><div class="stock-bar-inner" style="width:${pct}%;background:${barColor}"></div></div>
-          <span class="stock-text">${r.sales.toLocaleString()} sold</span>
+          <div class="stock-bar">
+            <div class="stock-bar-inner" style="width:${pct}%;background:${barColor}"></div>
+          </div>
+          <span class="stock-text">${changeStr}</span>
         </div>
       </td>
-      <td>${pillHtml}</td>
+      <td><span class="pill ${pillCls}">${sign}${r.qty}</span></td>
     </tr>`;
   }).join('');
 }
@@ -230,20 +366,20 @@ function renderTable() {
 function updateStats(sales) {
   const quota     = parseInt(document.getElementById('inputQuota').value)     || 15;
   const threshold = parseInt(document.getElementById('inputThreshold').value) || null;
-  document.getElementById('statTotal').textContent = sales.toLocaleString();
-  document.getElementById('statCut').textContent   = (threshold && quota && (sales - threshold) > 0)
-    ? Math.round((sales - threshold) / quota) : '—';
-  if (initialSales !== null) {
-    const gained = sales - initialSales;
-    document.getElementById('statInitialNote').textContent =
-      `Started at ${initialSales.toLocaleString()} · ${gained >= 0 ? '+' : ''}${gained} since start`;
+  document.getElementById('statTotal').textContent = sales;
+  if (threshold && quota) {
+    const cut = Math.round((sales - threshold) / quota);
+    document.getElementById('statCut').textContent = cut > 0 ? cut : '—';
+  } else {
+    document.getElementById('statCut').textContent = '—';
   }
 }
 
 function flashUpdate() {
   const dot = document.getElementById('updateDot');
   dot.classList.remove('idle');
-  document.getElementById('lastUpdated').textContent = 'Updated at ' + new Date().toLocaleTimeString('en-GB');
+  document.getElementById('lastUpdated').textContent =
+    'Updated at ' + new Date().toLocaleTimeString('en-GB');
   setTimeout(() => dot.classList.add('idle'), 2000);
 }
 
@@ -263,23 +399,25 @@ async function doCheck() {
   const uid    = document.getElementById('cfgUid').value.trim();
   const cartId = document.getElementById('cfgCart').value.trim();
   const name   = document.getElementById('cfgName').value.trim() || uid;
+
   document.getElementById('spinIcon').classList.add('active');
   try {
     const sales   = await fetchSales(uid, cartId);
     const timeStr = new Date().toLocaleString('en-GB', { hour12: false }).replace(',', '');
-    const isFirst = lastSales === null;
 
-    if (isFirst || sales !== lastSales) {
-      if (isFirst) initialSales = sales;
+    if (lastSales === null || sales !== lastSales) {
       records.push({
-        ts: Date.now(), time: timeStr, product: name,
-        stockBefore: isFirst ? null : lastSales,
-        sales, qty: isFirst ? 0 : sales - lastSales,
+        ts:          Date.now(),
+        time:        timeStr,
+        product:     name,
+        stockBefore: lastSales,
+        stockAfter:  sales,
+        qty:         lastSales !== null ? sales - lastSales : 0,
       });
-      document.getElementById('countBadge').textContent =
-        records.length + ' entr' + (records.length === 1 ? 'y' : 'ies');
+      document.getElementById('countBadge').textContent = records.length + ' entries';
       renderTable();
     }
+
     lastSales = sales;
     updateStats(sales);
     flashUpdate();
@@ -293,7 +431,7 @@ async function doCheck() {
 
 function startMonitor() {
   if (running) return;
-  running = true; lastSales = null; initialSales = null; records = []; renderTable();
+  running = true; lastSales = null; records = []; renderTable();
   const secs = Math.max(5, parseInt(document.getElementById('cfgInterval').value) || 30);
   document.getElementById('footerMsg').textContent = `Auto-refreshes every ${secs} seconds`;
   document.getElementById('btnStart').disabled = true;
@@ -310,8 +448,12 @@ function stopMonitor() {
   document.getElementById('updateDot').classList.add('idle');
 }
 
-document.getElementById('inputThreshold').addEventListener('input', () => { if (lastSales !== null) updateStats(lastSales); });
-document.getElementById('inputQuota').addEventListener('input',     () => { if (lastSales !== null) updateStats(lastSales); });
+document.getElementById('inputThreshold').addEventListener('input', () => {
+  if (lastSales !== null) updateStats(lastSales);
+});
+document.getElementById('inputQuota').addEventListener('input', () => {
+  if (lastSales !== null) updateStats(lastSales);
+});
 </script>
 </body>
 </html>
