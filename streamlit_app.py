@@ -40,7 +40,12 @@ with st.sidebar:
 def fetch_gist():
     url  = f"https://api.github.com/gists/{GIST_ID}"
     resp = requests.get(url, headers={"Accept": "application/vnd.github.v3+json"}, timeout=10)
-    raw  = resp.json()["files"]["musicart_data.json"]["content"]
+    data = resp.json()
+    if "files" not in data:
+        raise Exception(f"GitHub API error: {data.get('message', str(data))}")
+    if "musicart_data.json" not in data["files"]:
+        raise Exception(f"File not found in gist. Files present: {list(data['files'].keys())}")
+    raw = data["files"]["musicart_data.json"]["content"]
     return json.loads(raw)
 
 try:
